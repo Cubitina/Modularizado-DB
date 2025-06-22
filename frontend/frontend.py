@@ -69,7 +69,6 @@ def menu_de_bienvenida(menu):
 def limpiar_pantalla_consola():
     """
     Función para limpiar la pantalla de la consola de acuerdo al sistema operativo en donde se está utilizando la app.
-
     """
     # verifica si el sistema operativo es windows
     if os.name== 'nt':
