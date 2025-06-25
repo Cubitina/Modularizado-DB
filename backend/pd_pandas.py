@@ -9,8 +9,6 @@ import seaborn as sns
 
 # Nombre de la base de datos
 productos_db = "productos.db"
-# Lista de colores para el gráfico de barras
-colores = ['red', 'green', 'blue', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan', 'cadetblue', 'cornflowerblue','indigo','crimson', 'darkred'] 
 
 def conectar_db(db):
     """
