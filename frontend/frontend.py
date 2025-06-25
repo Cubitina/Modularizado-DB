@@ -6,6 +6,7 @@ init(autoreset=True) # Inicializa colorama para que los colores se reinicien aut
 from backend.backend import *
 from backend.mostrar_listado import *
 from backend.validar_op_menu import *
+from backend.pd_pandas import *
 
 # Función del menú principal del programa. 
 def menu():
@@ -20,7 +21,7 @@ def menu():
     while True:
         # Opciones del menú principal
         print(Style.BRIGHT + Fore.BLUE +f'\nPor favor, indique la opción deseada: ')
-        print(f'\nSi desea agregar un producto, presione 1.\nSi desea visualizar el listado completo de productos, presione 2.\nSi desea buscar un producto, presione 3.\nSi desea modificar un producto, presione 4.\nSi desea eliminar un producto, presione 5.\nSi desea limpiar la consola para una mejor visualización, presion 6.\nSi desea salir del programa, presione 7.')
+        print(f'\nSi desea agregar un producto, presione 1.\nSi desea visualizar el listado de sus productos, presione 2.\nSi desea buscar un producto, presione 3.\nSi desea modificar un producto, presione 4.\nSi desea eliminar un producto, presione 5.\nSi desea limpiar la consola para una mejor visualización, presion 6.\nSi desea salir del programa, presione 7.')
         
         # Llama  a la función "validar_opcion_menu()" para que el usuario ingrese una opción y valide la entrada.
         opciones_menu= validar_opcion_menu()
@@ -91,7 +92,7 @@ def mostrar_listado_menu():
     while True:
         # Opciones del menú principal
         print(Style.BRIGHT + Fore.BLUE +f'\nPor favor, indique la opción deseada: ')
-        print(f'\nSi desea ver el listado completo de productos, presione 1.\nSi desea visualizar el listado de productos por precio ascendente, presione 2.\nSi desea visualizar el listado de productos por precio descendente, presione 3.\nSi desea visualizar el listado de productos por orden alfabético ascendente, presione 4.\nSi desea visualizar el listado de productos por orden alfabético descendente, presione 5.\nSi desea regrear al menú principal, presione 6.')
+        print(f'\nSi desea ver el listado completo de productos, presione 1.\nSi desea visualizar el listado de productos por precio ascendente, presione 2.\nSi desea visualizar el listado de productos por precio descendente, presione 3.\nSi desea visualizar el listado de productos por orden alfabético ascendente, presione 4.\nSi desea visualizar el listado de productos por orden alfabético descendente, presione 5.\nSi desea ver un gráfico de qué tipo de productos tiene en su lista, presione 6. \nSi desea ver un gráfico de barras de sus productos y precios, precione 7.\nSi desea regrear al menú principal, presione 8.')
         
         # Llama  a la función "validar_opcion_menu()" para que el usuario ingrese una opción y valide la entrada.
         opciones_menu= validar_opcion_menu()
@@ -125,6 +126,14 @@ def mostrar_listado_menu():
                 mostrar_listado_ord(llave, modo)
 
             case 6:
+                # Llama a la función "grafico_tipo_productos()"
+                grafico_tipo_productos()
+
+            case 7:
+                # Regresa al menú principal
+                graf_barras_prod_prec()
+            
+            case 8:
                 # Regresa al menú principal
                 break
 

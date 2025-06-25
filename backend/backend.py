@@ -60,14 +60,14 @@ def agregar_productos():
             # Insertar el producto en la base de datos
             cursor.execute('''
             INSERT INTO productos (nombre, categoria, precio, fecha_incorporacion)
-            VALUES (?, ?, ?, ?)
+            VALUES (?, ?, ?, ?);
             ''', (nombre, categoria, precio, fecha_incorporacion))
             # Confirmar la operación con la base de datos
             conexion.commit()
             print(f'\nEl producto {nombre} fue registrado exitosamente. \U0001F600')
             
             # Muestra al usuario la incorporación realizada
-            cursor.execute('''SELECT * FROM productos ORDER BY id DESC LIMIT 1;''')
+            cursor.execute('SELECT * FROM productos ORDER BY id DESC LIMIT 1;')
             ult_inc= cursor.fetchone()
             if ult_inc:
                 print(
@@ -123,13 +123,15 @@ def buscador_de_productos():
             if buscar_producto == '':
                 break
             
-            cursor.execute("SELECT * FROM productos WHERE id = ? OR nombre = ? OR categoria = ? OR precio = ?", (buscar_producto, buscar_producto, buscar_producto, buscar_producto))
+            cursor.execute('SELECT * FROM productos WHERE id = ? OR nombre = ? OR categoria = ? OR precio = ?;', (buscar_producto, buscar_producto, buscar_producto, buscar_producto))
             productos = cursor.fetchall()
+            # Si no encuentra producto muestra un mensaje
             if not productos:
                 print(Fore.RED + '\U0001F614 No se encontró ningún producto.\n')
-                return
+            
             # Texto que encabezará los resultados de la búsqueda
-            print(Style.RESET_ALL +
+            if productos:
+                print(Style.RESET_ALL +
                     f'\n\U0001F600 La búsqueda "{buscar_producto}" fue encontrada en el/los siguiente/s producto/s:')
             # Imprime los productos encontrados
             for producto in productos:
@@ -201,18 +203,18 @@ def modificar_producto():
                 # Pasa el dato ingresado a lower para poder almacenarlo
                 nuevo_valor = nuevo_valor.lower()
                 # Realizamos la modificación en la base de datos
-                cursor.execute(f"UPDATE productos SET {llave_sc} = ? WHERE id = ?", (nuevo_valor,cod_prod_a_modificar))
+                cursor.execute(f'UPDATE productos SET {llave_sc} = ? WHERE id = ?;', (nuevo_valor,cod_prod_a_modificar))
             if nuevo_valor.isdigit():
                 # Pasa el input a type int
                 nuevo_valor_int = int(nuevo_valor)
                 # Realizamos la modificación en la base de datos
-                cursor.execute(f'UPDATE productos SET {llave_sc} = ? WHERE id = ?', (nuevo_valor_int, cod_prod_a_modificar))
+                cursor.execute(f'UPDATE productos SET {llave_sc} = ? WHERE id = ?;', (nuevo_valor_int, cod_prod_a_modificar))
                 
             # Confirmar los cambios en la db
             conexion.commit()
 
             # Muestra al usuario cómo quedó el producto modificado
-            cursor.execute(f'SELECT * FROM productos WHERE id = ?', (cod_prod_a_modificar,))
+            cursor.execute(f'SELECT * FROM productos WHERE id = ?;', (cod_prod_a_modificar,))
             producto_modificado = cursor.fetchone()
             print(
                     Style.RESET_ALL + Back.YELLOW + f'\n\n\U0001F600 A continuación le mostramos la modificación realizada: \n\tCódigo:\t   {producto_modificado[0]}\n\tNombre:    {producto_modificado[1].capitalize()}\n\tCategoría: {producto_modificado[2].capitalize()}\n\tPrecio:    ${producto_modificado[3]}.\n\tFecha de incorporación: {producto_modificado[4]}\n')
@@ -254,7 +256,7 @@ def eliminar_producto():
                 break
 
             # Bucle para buscar y acceder al código del producto en el listado de productos
-            cursor.execute("SELECT * FROM productos WHERE id = ?", (producto_a_eliminar_int,))
+            cursor.execute('''SELECT * FROM productos WHERE id = ?;''', (producto_a_eliminar_int,))
             producto = cursor.fetchone()
 
             # Pedimos al usuario una confirmación para eliminar el producto
@@ -265,7 +267,7 @@ def eliminar_producto():
                 return
             else:
                 # Procede a eliminar al alumno
-                cursor.execute("DELETE FROM productos WHERE id = ?", (producto_a_eliminar_int,))
+                cursor.execute('DELETE FROM productos WHERE id = ?,', (producto_a_eliminar_int,))
                 conexion.commit()
                 # Muestra mensaje del producto eliminado
                 print(Back.LIGHTRED_EX +f'\nEl producto "{producto[1].capitalize()}", {producto[2]}, de precio ${producto[3]}, incorporado el día {producto[4]}, con el código {producto[0]} ya no pertenece a su base de datos. Bye Bye "{producto[1].capitalize()}", fuiste debidamente eliminado/a.\U0001F629\n')
@@ -314,7 +316,7 @@ def solicitar_codigo_prod(funcion):
             # Pasa el input a type int para poder modificar.
             if cod_producto.isdigit():
                 cod_producto_int = int(cod_producto)
-                cursor.execute("SELECT id FROM productos WHERE id = ?", (cod_producto_int,))
+                cursor.execute('SELECT id FROM productos WHERE id = ?;', (cod_producto_int,))
                 producto= cursor.fetchone()
                 # Imprime mensaje de código inexistente cuando sqlite3 no encuentra el id ya que no se encontró ningún producto con ese código
                 if not producto:
