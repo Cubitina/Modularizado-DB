@@ -55,13 +55,20 @@ def agregar_productos():
             # Si el texto ingresado por el usuario es "fin" sale del bucle y vuelve al menú principal
             if precio == 'fin':
                 break
+
+            stock= validar_dato_num_ingresado('stock')
+            if stock == 'fin':
+                break
+
             fecha_incorporacion = datetime.date.today().strftime("%d/%m/%Y")
+
+            
             
             # Insertar el producto en la base de datos
             cursor.execute('''
-            INSERT INTO productos (nombre, categoria, precio, fecha_incorporacion)
-            VALUES (?, ?, ?, ?);
-            ''', (nombre, categoria, precio, fecha_incorporacion))
+            INSERT INTO productos (nombre, categoria, precio, stock, fecha_incorporacion)
+            VALUES (?, ?, ?, ?, ?);
+            ''', (nombre, categoria, precio, stock, fecha_incorporacion))
             # Confirmar la operación con la base de datos
             conexion.commit()
             print(f'\nEl producto {nombre} fue registrado exitosamente. \U0001F600')
@@ -71,7 +78,7 @@ def agregar_productos():
             ult_inc= cursor.fetchone()
             if ult_inc:
                 print(
-                    Back.GREEN + f'\n\nA continuación le mostramos la incorporación realizada: \n\tCódigo del producto: Nº{ult_inc[0]} \n\tProducto:  {ult_inc[1].capitalize()} \n\tCategoría: {ult_inc[2].capitalize()}\n\tPrecio:\t   ${ult_inc[3]}\n\tFecha de incorporación: {ult_inc[4]}.\n')
+                    Back.GREEN + f'\n\nA continuación le mostramos la incorporación realizada: \n\tCódigo del producto: Nº{ult_inc[0]} \n\tProducto:  {ult_inc[1].capitalize()} \n\tCategoría: {ult_inc[2].capitalize()}\n\tPrecio:\t   ${ult_inc[3]}\n\tStock:\t   {ult_inc[4]}\n\tFecha de incorporación: {ult_inc[5]}.\n')
             
             # Si esta lista está vacía, no imprime el listado completo de productos al final de la función.
             productos_incorporados.append(ult_inc)
@@ -136,7 +143,7 @@ def buscador_de_productos():
             # Imprime los productos encontrados
             for producto in productos:
                 print(Back.YELLOW +
-                    f'\n\n\tCódigo:\t   {producto[0]}\n\tNombre:\t   {producto[1].capitalize()}\n\tCategoría: {producto[2].capitalize()}\n\tPrecio:    ${producto[3]}.\n\tFecha de incorporación: {producto[4]}\n')
+                    f'\n\n\tCódigo:\t   {producto[0]}\n\tNombre:\t   {producto[1].capitalize()}\n\tCategoría: {producto[2].capitalize()}\n\tPrecio:    ${producto[3]}.\n\tStock:\t   {producto[4]}\nFecha de incorporación: {producto[5]}.\n')
 
     finally:
         # Cerramos la conexión para evitar problemas futuros
@@ -217,7 +224,7 @@ def modificar_producto():
             cursor.execute(f'SELECT * FROM productos WHERE id = ?;', (cod_prod_a_modificar,))
             producto_modificado = cursor.fetchone()
             print(
-                    Style.RESET_ALL + Back.YELLOW + f'\n\n\U0001F600 A continuación le mostramos la modificación realizada: \n\tCódigo:\t   {producto_modificado[0]}\n\tNombre:    {producto_modificado[1].capitalize()}\n\tCategoría: {producto_modificado[2].capitalize()}\n\tPrecio:    ${producto_modificado[3]}.\n\tFecha de incorporación: {producto_modificado[4]}\n')
+                    Style.RESET_ALL + Back.YELLOW + f'\n\n\U0001F600 A continuación le mostramos la modificación realizada: \n\tCódigo:\t   {producto_modificado[0]}\n\tNombre:    {producto_modificado[1].capitalize()}\n\tCategoría: {producto_modificado[2].capitalize()}\n\tPrecio:    ${producto_modificado[3]}.\n\tStock:\t   {producto_modificado[4]}\nFecha de incorporación: {producto_modificado[5]}.\n')
             # Una vez finalizado, sale del bucle
             break
     finally:
@@ -272,9 +279,9 @@ def eliminar_producto():
                 # Muestra mensaje del producto eliminado
                 print(Back.LIGHTRED_EX +f'\nEl producto "{producto[1].capitalize()}", {producto[2]}, de precio ${producto[3]}, incorporado el día {producto[4]}, con el código {producto[0]} ya no pertenece a su base de datos. Bye Bye "{producto[1].capitalize()}", fuiste debidamente eliminado/a.\U0001F629\n')
                 producto_eliminado.append(producto)
-
             # Una vez finalizado, sale del bucle
             break
+        
     finally:
         # Cerramos la conexión para evitar problemas futuros
         if conexion:
@@ -345,10 +352,10 @@ def validar_dato_ingresado(key_producto):
         dato = input(
             f'Por favor, ingrese el {key_producto} del producto: ').lower().strip()
         # Si el usuario no ingresa un dato le muestra mensaje de error.
-        if dato == '':
+        if len(dato) == 0:
             print(Fore.RED + '\U0001F620 Error. Por favor, ingrese un dato válido.')
         # Si ingresó un contenido sigue con el código
-        if dato.isalpha():
+        if isinstance(dato, str):
             return dato
 
 
@@ -363,7 +370,7 @@ def validar_dato_num_ingresado(key_producto):
     while True:
         # Solicita el precio del producto en formato string
         dato = input(
-            f"Por favor, ingrese el {key_producto} del producto: $").lower().strip()
+            f"Por favor, ingrese el {key_producto} del producto: ").lower().strip()
         # Chequea si el usuario dejó en blanco o si ingresó un texto
         if dato.isdigit():
             # Pasa el string ingresado a type int

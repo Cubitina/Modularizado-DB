@@ -13,7 +13,7 @@ def validar_opcion_menu():
     """
     while True:
         # Variable para ingresar la opción del menú
-        opcion_menu= input(Fore.BLUE +'\n\nPor favor, ingrese su opción aquí: ').strip()
+        opcion_menu= input(Fore.CYAN +'\n\nPor favor, ingrese su opción aquí: ').strip()
         # Evitamos el error de la app si el usuario ingresa un string.
         if type(opcion_menu)== str and not opcion_menu.isdigit():
             print(Fore.RED + "Error. Por favor, ingrese el número indicado.\n")

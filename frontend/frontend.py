@@ -92,7 +92,7 @@ def mostrar_listado_menu():
     while True:
         # Opciones del menú principal
         print(Style.BRIGHT + Fore.BLUE +f'\nPor favor, indique la opción deseada: ')
-        print(f'\nSi desea ver el listado completo de productos, presione 1.\nSi desea visualizar el listado de productos por precio ascendente, presione 2.\nSi desea visualizar el listado de productos por precio descendente, presione 3.\nSi desea visualizar el listado de productos por orden alfabético ascendente, presione 4.\nSi desea visualizar el listado de productos por orden alfabético descendente, presione 5.\nSi desea ver un gráfico de qué tipo de productos tiene en su lista, presione 6. \nSi desea ver un gráfico de barras de sus productos y precios, precione 7.\nSi desea regrear al menú principal, presione 8.')
+        print(f'\nSi desea ver el listado completo de productos, presione 1.\nSi desea visualizar el listado de productos por precio ascendente, presione 2.\nSi desea visualizar el listado de productos por precio descendente, presione 3.\nSi desea visualizar el listado de productos por orden alfabético ascendente, presione 4.\nSi desea visualizar el listado de productos por orden alfabético descendente, presione 5.\nSi desea ver el listado de productos bajos en stock, presione 6.\nSi desea ver un gráfico de qué tipo de productos tiene en su lista, presione 7. \nSi desea ver un gráfico de barras de sus productos y precios, precione 8.\nSi desea ver un gráfico de barras de sus productos y su stock, presione 9.\nSi desea regrear al menú principal, presione 10.')
         
         # Llama  a la función "validar_opcion_menu()" para que el usuario ingrese una opción y valide la entrada.
         opciones_menu= validar_opcion_menu()
@@ -126,14 +126,24 @@ def mostrar_listado_menu():
                 mostrar_listado_ord(llave, modo)
 
             case 6:
+                # Llama a la fucnión "mostrar_stock_bajo()"
+                mostrar_stock_bajo()
+            
+            case 7:
                 # Llama a la función "grafico_tipo_productos()"
                 grafico_tipo_productos()
 
-            case 7:
-                # Regresa al menú principal
-                graf_barras_prod_prec()
-            
             case 8:
+                # Llama a la función "graf_barras_prod()" 
+                dato = 'precio'
+                graf_barras_prod(dato)
+            
+            case 9:
+                # Llama a la función "graf_barras_prod()" 
+                dato = 'stock'
+                graf_barras_prod(dato)
+
+            case 10:
                 # Regresa al menú principal
                 break
 

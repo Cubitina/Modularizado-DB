@@ -1,38 +1,14 @@
 # Importamos pandas para poder trabajar la información de la base de datos
 import pandas as pd
-# Importamos sqlite3 para poder trabajar con bases de datos
-import sqlite3
 # Importamos matplotlib para gráficos
 import matplotlib.pyplot as plt
 # Importamos seaborn para colores aesthetic
 import seaborn as sns
+from backend.conectar_db import *
+from backend.mostrar_listado import *
 
 # Nombre de la base de datos
 productos_db = "productos.db"
-
-def conectar_db(db):
-    """
-    Función para conectar a la base de datos.
-
-    Args:
-    db: Nombre del archivo de la base de datos.
-
-    Returns:
-    Conexion si la conexión es exitosa, mensaje de error si no lo logra.
-    """
-
-    try:
-    # Intentar conectar a la base de datos. Si no existe, la crea.
-        conexion = sqlite3.connect(db)
-        #print(f'Se ha conectado a {db} exitosamente')
-        return conexion
-    # Excepciones
-    except sqlite3.Error as e:
-        # Si hay un error muestra un mensaje al usuario
-        print(f'Error en la base de datos: {e}.')
-        # Si ocurre un error, revertimos los cambios
-        conexion.rollback()
-        return None
 
 def grafico_tipo_productos():
     """
@@ -87,21 +63,23 @@ def grafico_tipo_productos():
             conexion.close()
 
 
-def graf_barras_prod_prec():
+def graf_barras_prod(dato):
     """
     Función Nº 7 del menú de visualización de datos de la db. 
     Muestra un gráfico historiograma con los productos y sus precios relacionados. También hay un promedio de precio marcado con la línea roja
 
-    Args: key 'nombre' y 'precio' de la tabla productos
+    Args: key 'nombre', 'precio' y 'stock' de la tabla productos de acuerdo a lo ingresado en el menú por el usuario a través de la variable "dato".
 
     Returns: gráfico historiograma emergente en una ventana nueva.
     """
+    # Sacamos las comillas a la variabe "dato" para que pueda utilizarlo para acceder a la base de datos
+    dato_sc = dato.replace("'", "")
     try:
         # Intentar conectar a la base de datos. Si no existe, la crea.
         conexion = conectar_db("productos.db")
         
         # Consulta SQL para obtener datos
-        query = 'SELECT nombre, precio FROM productos;'
+        query = f'SELECT nombre, {dato_sc} FROM productos;'
         # Leer datos a un DataFrame de Pandas
         df = pd.read_sql_query(query, conexion)
         # Capitalizar las referencias
@@ -119,16 +97,22 @@ def graf_barras_prod_prec():
     try:
         # Ajusta el tamaño del gráfico
         plt.figure(figsize=(10,7))
-        #Creación del historiograma. plt.bar() se utiliza para crear el gráfico de barras. Utilizamos seaborn porque tiene colores más agradables a la vista del usuario.
+        #Creación del historiograma. plt.bar() se utiliza para crear el gráfico de barras. Utilizamos seaborn porque tiene colores más agradables a la vista del usuario. 
         #plt.bar(df['nombre'], df['precio'])
-        sns.barplot(data= df, x='nombre', y='precio', hue= 'nombre', palette='viridis', legend=False)
-        # Creamos línea vertical que muestra el precio promedio de los productos de la lista
-        plt.axhline(df['precio'].mean(), color='tomato', label='Precio promedio')
+        if dato =='precio':
+            sns.barplot(data= df, x='nombre', y='precio', hue= 'nombre', palette='viridis', legend=False)
+        else:
+            sns.barplot(data= df, x='nombre', y='stock', hue= 'nombre', palette='magma', legend=False)
+        # Creamos línea vertical que muestra el precio o stock promedio de los productos de la lista
+        if dato == 'precio':
+            plt.axhline(df['precio'].mean(), color='tomato', label='Precio promedio')
+        else:
+            plt.axhline(df['stock'].mean(), color='tomato', label='Stock promedio')
         # Títutlo de la tabla
-        plt.title(f'Gráfico de productos y precios\n')
+        plt.title(f'Gráfico de productos y {dato_sc}\n')
         # Títulos de vectrices
         plt.xlabel("Producto")
-        plt.xlabel("Precio")
+        plt.ylabel(f"{dato_sc.capitalize()}")
         # Tamaño letra
         plt.xticks(fontsize=14)
         # Rota las etiquetas del eje x para mejor legibilidad
