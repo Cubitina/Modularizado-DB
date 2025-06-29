@@ -6,13 +6,13 @@ La app:
 Primeros Pasos:
 Antes de comenzar a utilizar nuestra aplicación deberá clonar el repositorio de https://github.com/Cubitina/Modularizado-DB en su computadora.
 La primera vez que quiera utilizar el programa deberá ejecutar el archivo “instalar.py” en su terminal. 
-!["Instalación de la aplicación"] (imagnes/01_instalacion.png)
+!["Instalación de la aplicación"] (imagenes/01_instalacion.png)
 Cuando le consulte si desea instalarla, escriba en la terminal “si”. Esto permitirá que se instale la base de datos con la que trabajará la aplicación. Una vez realizada esta operación, la misma aplicación los redireccionará al menú principal.
-!["Instalación de base de datos"] (imagnes/02_instalacion.png)
+!["Instalación de base de datos"] (imagenes/02_instalacion.png)
 Cabe destacar que este procedimiento se debe realizar una sola vez. Cuando ya tiene la base de datos instalada, para iniciar el programa deberá ejecutar el archivo “main.py”. Este los llevará directamente el menú principal.
 
 Menú principal:
-!["Menú principal de la app"] (imagnes/03_menu_principal.png)
+!["Menú principal de la app"] (imagenes/03_menu_principal.png)
 Esta es la puerta de entrada de la aplicación. En él encontrará 7 opciones:
 1)	Opción para agregar productos.
 2)	Visualización de datos.
