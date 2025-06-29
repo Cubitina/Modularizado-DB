@@ -129,8 +129,10 @@ def buscador_de_productos():
             # Si el usuario no ingresa un dato, se sale del bucle
             if buscar_producto == '':
                 break
-            
-            cursor.execute('SELECT * FROM productos WHERE id = ? OR nombre = ? OR categoria = ? OR precio = ?;', (buscar_producto, buscar_producto, buscar_producto, buscar_producto))
+            # Ponemos los signos % para que busque en todas las opciones posibles.
+            buscar=f'%{buscar_producto}%'
+            # Ejecutar la búsqueda
+            cursor.execute('SELECT * FROM productos WHERE id LIKE ? OR nombre LIKE ? OR categoria LIKE ? OR precio LIKE ?;', (buscar, buscar, buscar, buscar))
             productos = cursor.fetchall()
             # Si no encuentra producto muestra un mensaje
             if not productos:
@@ -143,7 +145,7 @@ def buscador_de_productos():
             # Imprime los productos encontrados
             for producto in productos:
                 print(Back.YELLOW +
-                    f'\n\n\tCódigo:\t   {producto[0]}\n\tNombre:\t   {producto[1].capitalize()}\n\tCategoría: {producto[2].capitalize()}\n\tPrecio:    ${producto[3]}.\n\tStock:\t   {producto[4]}\nFecha de incorporación: {producto[5]}.\n')
+                    f'\n\n\tCódigo:\t   {producto[0]}\n\tNombre:\t   {producto[1].capitalize()}\n\tCategoría: {producto[2].capitalize()}\n\tPrecio:    ${producto[3]}.\n\tStock:\t   {producto[4]}\n\tFecha de incorporación: {producto[5]}.\n')
 
     finally:
         # Cerramos la conexión para evitar problemas futuros
@@ -181,7 +183,7 @@ def modificar_producto():
                 break
 
             # Solicita el key a modificar llamando a la función "validar_opcion_menu()":
-            print(Style.RESET_ALL + f'Por favor, ingrese qué valor desea modificar. \nPresione 1 si desea modificar el nombre. \nPresione 2 si desea modificar el tipo de producto. \nPresione 3 si desea modificar el precio.\nPresione 4 si desea regresar al menú de inicio.')
+            print(Style.RESET_ALL + f'Por favor, ingrese qué valor desea modificar. \nPresione 1 si desea modificar el nombre. \nPresione 2 si desea modificar el tipo de producto. \nPresione 3 si desea modificar el precio.\nPresione 4 si desea modificar el stock.\nPresione 5 si desea regresar al menú de inicio.')
 
             key_a_modificar = validar_opcion_menu()
 
@@ -194,6 +196,8 @@ def modificar_producto():
                 case 3:
                     llave = 'precio'
                 case 4:
+                    llave = 'stock'
+                case 5:
                     break
                 case _:
                     print(Fore.RED + "\U0001F620 No ingresó una opción válida.")
@@ -224,7 +228,7 @@ def modificar_producto():
             cursor.execute(f'SELECT * FROM productos WHERE id = ?;', (cod_prod_a_modificar,))
             producto_modificado = cursor.fetchone()
             print(
-                    Style.RESET_ALL + Back.YELLOW + f'\n\n\U0001F600 A continuación le mostramos la modificación realizada: \n\tCódigo:\t   {producto_modificado[0]}\n\tNombre:    {producto_modificado[1].capitalize()}\n\tCategoría: {producto_modificado[2].capitalize()}\n\tPrecio:    ${producto_modificado[3]}.\n\tStock:\t   {producto_modificado[4]}\nFecha de incorporación: {producto_modificado[5]}.\n')
+                    Style.RESET_ALL + Back.YELLOW + f'\n\n\U0001F600 A continuación le mostramos la modificación realizada: \n\tCódigo:\t   {producto_modificado[0]}\n\tNombre:    {producto_modificado[1].capitalize()}\n\tCategoría: {producto_modificado[2].capitalize()}\n\tPrecio:    ${producto_modificado[3]}.\n\tStock:\t   {producto_modificado[4]}\n\tFecha de incorporación: {producto_modificado[5]}.\n')
             # Una vez finalizado, sale del bucle
             break
     finally:
@@ -274,10 +278,10 @@ def eliminar_producto():
                 return
             else:
                 # Procede a eliminar al alumno
-                cursor.execute('DELETE FROM productos WHERE id = ?,', (producto_a_eliminar_int,))
+                cursor.execute('DELETE FROM productos WHERE id = ?', (producto_a_eliminar_int,))
                 conexion.commit()
                 # Muestra mensaje del producto eliminado
-                print(Back.LIGHTRED_EX +f'\nEl producto "{producto[1].capitalize()}", {producto[2]}, de precio ${producto[3]}, incorporado el día {producto[4]}, con el código {producto[0]} ya no pertenece a su base de datos. Bye Bye "{producto[1].capitalize()}", fuiste debidamente eliminado/a.\U0001F629\n')
+                print(Style.RESET_ALL + Back.LIGHTRED_EX +f'\nEl producto "{producto[1].capitalize()}", {producto[2]}, de precio ${producto[3]}, incorporado el día {producto[4]}, con el código {producto[0]} ya no pertenece a su base de datos. Bye Bye "{producto[1].capitalize()}", fuiste debidamente eliminado/a.\U0001F629\n')
                 producto_eliminado.append(producto)
             # Una vez finalizado, sale del bucle
             break

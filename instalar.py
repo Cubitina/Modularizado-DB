@@ -30,3 +30,5 @@ def instalar_programa():
     print('\n\nPrograma instalado exitosamente.\nA continuación inciaremos el programa. Muchas gracias por elegirnos.')
     time.sleep(5)
     menu_de_bienvenida(menu)
+
+instalar_programa()
